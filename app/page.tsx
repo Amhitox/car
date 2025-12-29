@@ -11,7 +11,20 @@ import clsx from 'clsx';
 import { ThemeToggle } from './components/ThemeToggle';
 
 export default function Home() {
-  const { isConnected, status } = useIoTConnection();
+  const { isConnected, status, sendCommand, lastMessage } = useIoTConnection();
+
+  const handleJoystickMove = (x: number, y: number) => {
+    let command = 'stop';
+    if (y > 0) command = 'forward';
+    else if (y < 0) command = 'backward';
+    else if (x < 0) command = 'left';
+    else if (x > 0) command = 'right';
+
+    if (command !== 'stop') {
+      console.log(`[Joystick] Triggering API: ${command}`);
+      sendCommand(command);
+    }
+  };
 
   return (
     <main className="min-h-screen p-6 md:p-8 flex flex-col gap-6 max-w-[1600px] mx-auto transition-colors duration-300">
@@ -81,9 +94,11 @@ export default function Home() {
               <span className="text-blue-500/80">[10:42:02] Connected to broker</span>
               <span className="text-neutral-500">[10:42:03] Video stream ready</span>
               <span className="text-neutral-500">[10:42:05] Telemetry active</span>
-              <span className="text-amber-500/80 flex items-center gap-2">
-                <span>[10:45:00] Motion detected</span>
-              </span>
+              {lastMessage && (
+                <span className="text-cyan-500/80 font-bold flex items-center gap-2">
+                  <span>{`> ${lastMessage}`}</span>
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -96,7 +111,7 @@ export default function Home() {
           <Joystick
             label="Movement"
             type="movement"
-            onMove={(x, y) => console.log('Move', x, y)}
+            onMove={handleJoystickMove}
           />
           <div className="h-32 w-px bg-neutral-800 mx-4"></div>
           <Joystick

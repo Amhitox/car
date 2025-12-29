@@ -25,11 +25,11 @@ export default function Joystick({ label, type, onMove, className }: JoystickPro
                     "w-48 h-48 rounded-full border-4 flex items-center justify-center transition-all duration-300",
                     active ? "border-cyan-500 shadow-[0_0_20px_rgba(6,182,212,0.3)] bg-cyan-950/20" : "border-border bg-card"
                 )}>
-                    {/* Directional Indicators (Visual Only) */}
-                    <div className="absolute top-2 left-1/2 -translate-x-1/2 text-neutral-600"><ArrowUp size={16} /></div>
-                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-neutral-600"><ArrowDown size={16} /></div>
-                    <div className="absolute left-2 top-1/2 -translate-y-1/2 text-neutral-600"><ArrowLeft size={16} /></div>
-                    <div className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-600"><ArrowRight size={16} /></div>
+                    {/* Directional Click Areas (Simulated for this requirement) */}
+                    <button onClick={() => onMove?.(0, 1)} className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-12 flex items-center justify-center text-neutral-600 hover:text-cyan-500 z-20 cursor-pointer" title="Forward"><ArrowUp size={20} /></button>
+                    <button onClick={() => onMove?.(0, -1)} className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-12 flex items-center justify-center text-neutral-600 hover:text-cyan-500 z-20 cursor-pointer" title="Backward"><ArrowDown size={20} /></button>
+                    <button onClick={() => onMove?.(-1, 0)} className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-neutral-600 hover:text-cyan-500 z-20 cursor-pointer" title="Left"><ArrowLeft size={20} /></button>
+                    <button onClick={() => onMove?.(1, 0)} className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-neutral-600 hover:text-cyan-500 z-20 cursor-pointer" title="Right"><ArrowRight size={20} /></button>
 
                     {/* Stick */}
                     <button
