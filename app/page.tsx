@@ -1,4 +1,5 @@
 "use client";
+import { useRef } from 'react';
 
 import { Activity, Battery, Signal, Wifi, Settings } from 'lucide-react';
 import VideoPlayer from './components/VideoPlayer';
@@ -22,14 +23,21 @@ export default function Home() {
     }
   });
 
+  // Ref to track the last sent joystick command to avoid spamming the API
+  const lastJoystickCommand = useRef<string>('stop');
+
   const handleJoystickMove = (x: number, y: number) => {
     let command = 'stop';
-    if (y > 0) command = 'forward';
-    else if (y < 0) command = 'backward';
-    else if (x < 0) command = 'left';
-    else if (x > 0) command = 'right';
 
-    if (command !== 'stop') {
+    // Simple threshold logic for direction (could be improved for 8-way if needed)
+    // Using 0.5 threshold to require some deliberate movement
+    if (y > 0.5) command = 'forward';
+    else if (y < -0.5) command = 'backward';
+    else if (x < -0.5) command = 'left';
+    else if (x > 0.5) command = 'right';
+
+    if (command !== lastJoystickCommand.current) {
+      lastJoystickCommand.current = command;
       console.log(`[Joystick] Triggering API: ${command}`);
       sendCommand(command);
     }
