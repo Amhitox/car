@@ -9,9 +9,18 @@ import { useIoTConnection } from './context/IoTConnectionContext';
 import clsx from 'clsx';
 
 import { ThemeToggle } from './components/ThemeToggle';
+import { useKeyboardControls } from './hooks/use-keyboard-controls';
 
 export default function Home() {
   const { isConnected, status, sendCommand, lastMessage } = useIoTConnection();
+
+  // Use the new keyboard controls hook
+  useKeyboardControls({
+    onMove: (command: string) => {
+      console.log(`[Keyboard] Triggering API: ${command}`);
+      sendCommand(command);
+    }
+  });
 
   const handleJoystickMove = (x: number, y: number) => {
     let command = 'stop';
@@ -112,12 +121,6 @@ export default function Home() {
             label="Movement"
             type="movement"
             onMove={handleJoystickMove}
-          />
-          <div className="h-32 w-px bg-neutral-800 mx-4"></div>
-          <Joystick
-            label="Camera"
-            type="camera"
-            onMove={(x, y) => console.log('Cam', x, y)}
           />
         </div>
 
